@@ -9,6 +9,7 @@ import streamlit as st
 USER_EMAIL = "metrologia03@rstechengenharia.onmicrosoft.com"
 FILE_PATH = "01 - DRIVE METROLOGIA/Controle de Relatórios.xlsx"
 SCOPE = ["https://graph.microsoft.com/.default"]
+DATA_CACHE_TTL_SECONDS = 3600
 STATUS_LABELS = {
     "ENTREGUE": "Entregue",
     "ATRASADO": "Em atraso",
@@ -32,7 +33,7 @@ REPORT_COLUMNS = {
 }
 
 
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=DATA_CACHE_TTL_SECONDS)
 def load_data_from_onedrive() -> pd.DataFrame:
     microsoft_secrets = st.secrets["microsoft"]
     authority = (
