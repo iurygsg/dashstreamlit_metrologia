@@ -97,6 +97,7 @@ def render_detailed_analytics(data: pd.DataFrame) -> None:
             .rename("Mediana até a entrega (dias)")
         )
         st.subheader("Mediana do tempo de produção por mês")
+        st.caption("Tempo que leva para a produção do relatório")
         st.line_chart(monthly_medians.to_frame())
 
     with st.expander("Ver prazos por relatório"):
