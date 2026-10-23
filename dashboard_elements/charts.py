@@ -9,7 +9,7 @@ def render_charts(data: pd.DataFrame) -> None:
     with status_column:
         st.subheader("Relatórios por status")
         status_counts = data["status"].value_counts().rename("Relatórios")
-        st.bar_chart(status_counts.to_frame())
+        st.bar_chart(status_counts.to_frame(), sort="-Relatórios")
 
     with monthly_column:
         st.subheader("Conclusões por mês")
@@ -38,7 +38,7 @@ def render_charts(data: pd.DataFrame) -> None:
         if top_clients.empty:
             st.info("Não há clientes para exibir.")
         else:
-            st.bar_chart(top_clients.to_frame())
+            st.bar_chart(top_clients.to_frame(), sort="-Relatórios")
 
     with technician_column:
         st.subheader("Relatórios por técnico")
@@ -48,4 +48,4 @@ def render_charts(data: pd.DataFrame) -> None:
         if technician_counts.empty:
             st.info("Não há técnicos para exibir.")
         else:
-            st.bar_chart(technician_counts.to_frame())
+            st.bar_chart(technician_counts.to_frame(), sort="-Relatórios")
