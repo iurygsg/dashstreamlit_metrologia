@@ -34,7 +34,7 @@ st.markdown(
         opacity: 0.15;
         background:
             linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)),
-            url("/app/static/laboratory-background.jpg") center / cover no-repeat;
+            url("app/static/laboratory-background.jpg") center / cover no-repeat;
     }
 
     .stApp > header,
