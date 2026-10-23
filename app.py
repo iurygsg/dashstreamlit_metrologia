@@ -12,7 +12,7 @@ CLIENT_SECRET = st.secrets["microsoft"]["client_secret"]
 # 2. Configurações do arquivo e do usuário
 # Como estamos usando permissão de aplicativo, a Graph API precisa saber DE QUAL usuário baixar
 USER_EMAIL = "metrologia03@rstechengenharia.onmicrosoft.com"
-FILE_NAME = "Controle de Relatórios.xlsx"
+FILE_PATH = "01 - DRIVE METROLOGIA/Controle de Relatórios.xlsx"
 
 AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
 SCOPE = ["https://graph.microsoft.com/.default"]
@@ -38,7 +38,7 @@ def load_data_from_onedrive():
     
     # 4. Requisição de download na Graph API
     # O comando :/content traz o arquivo físico, não apenas os metadados
-    url = f"https://graph.microsoft.com/v1.0/users/{USER_EMAIL}/drive/root:/{FILE_NAME}:/content"
+    url = f"https://graph.microsoft.com/v1.0/users/{USER_EMAIL}/drive/root:/{FILE_PATH}:/content"
     
     response = requests.get(url, headers=headers)
     
