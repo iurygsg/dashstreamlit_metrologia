@@ -32,15 +32,22 @@ def render_filters(data: pd.DataFrame) -> dict[str, object]:
         if not valid_dates.empty:
             min_date = valid_dates.min().date()
             max_date = valid_dates.max().date()
-            selected_dates = st.date_input(
-                "Data de conclusão",
-                value=(min_date, max_date),
+            start_date = st.date_input(
+                "Data de conclusão — início",
+                value=min_date,
                 min_value=min_date,
                 max_value=max_date,
                 format="DD/MM/YYYY",
             )
-            if isinstance(selected_dates, tuple) and len(selected_dates) == 2:
-                date_range = (selected_dates[0], selected_dates[1])
+            end_date = st.date_input(
+                "Data de conclusão — fim",
+                value=max_date,
+                min_value=min_date,
+                max_value=max_date,
+                format="DD/MM/YYYY",
+            )
+            if isinstance(start_date, date) and isinstance(end_date, date):
+                date_range = (start_date, end_date)
 
     return {
         "statuses": selected_statuses,
