@@ -31,7 +31,7 @@ st.markdown(
         inset: 0;
         z-index: 0;
         pointer-events: none;
-        opacity: 0.03;
+        opacity: 0.15;
         background:
             linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)),
             url("/app/static/laboratory-background.jpg") center / cover no-repeat;
