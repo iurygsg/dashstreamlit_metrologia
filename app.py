@@ -18,6 +18,42 @@ st.set_page_config(
     page_icon="📊",
     layout="wide",
 )
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: transparent;
+    }
+
+    .stApp::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.03;
+        background:
+            linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)),
+            url("/app/static/laboratory-background.jpg") center / cover no-repeat;
+    }
+
+    .stApp > header,
+    .stApp > div {
+        position: relative;
+        z-index: 1;
+    }
+
+    [data-testid="stAppViewContainer"] {
+        background: transparent;
+    }
+
+    [data-testid="stSidebar"] {
+        background-color: rgba(255, 255, 255, 0.92);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 st.title("Dashboard: Controle de Relatórios")
 
 with st.sidebar:

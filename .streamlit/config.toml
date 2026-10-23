@@ -20,3 +20,6 @@ chartSequentialColors = [
     "#2563EB",
     "#1E3A8A",
 ]
+
+[server]
+enableStaticServing = true
