@@ -4,11 +4,13 @@ import requests
 import streamlit as st
 
 from dashboard_elements import render_dashboard
+from dashboard_elements.detailed_analytics import render_detailed_analytics
 from dashboard_elements.data import (
     DATA_CACHE_TTL_SECONDS,
     load_data_from_onedrive,
     prepare_report_data,
 )
+from dashboard_elements.filters import apply_filters, render_filters
 
 
 st.set_page_config(
@@ -19,6 +21,10 @@ st.set_page_config(
 st.title("Dashboard: Controle de Relatórios")
 
 with st.sidebar:
+    selected_page = st.radio(
+        "Página",
+        options=["Visão geral", "Análises detalhadas"],
+    )
     st.button(
         "Atualizar dados agora",
         on_click=load_data_from_onedrive.clear,
@@ -46,8 +52,21 @@ def render_dashboard_page() -> None:
 
     if report_data.empty:
         st.warning("A planilha não contém relatórios para exibir.")
-    else:
+    elif selected_page == "Visão geral":
+        st.header("Visão geral")
         render_dashboard(report_data)
+    else:
+        st.header("Análises detalhadas")
+        st.caption(
+            "Explore o volume mensal de serviços técnicos concluídos e o tempo "
+            "entre a conclusão técnica e a entrega do relatório."
+        )
+        filters = render_filters(report_data)
+        filtered_data = apply_filters(report_data, filters)
+        if filtered_data.empty:
+            st.info("Nenhum relatório corresponde aos filtros selecionados.")
+        else:
+            render_detailed_analytics(filtered_data)
 
 
 render_dashboard_page()
