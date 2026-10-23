@@ -76,7 +76,11 @@ def render_detailed_analytics(data: pd.DataFrame) -> None:
         monthly_counts = monthly_counts.astype(int).sort_index()
         monthly_counts.index = monthly_counts.index.to_timestamp()
         monthly_counts = monthly_counts.asfreq("MS", fill_value=0)
-        st.line_chart(monthly_counts)
+        st.line_chart(
+            monthly_counts,
+            y=list(monthly_counts.columns),
+            color=["#2563EB", "#14B8A6"],
+        )
 
     monthly_production = valid_production.dropna(subset=["data_conclusao"]).copy()
     if monthly_production.empty:
