@@ -1,10 +1,10 @@
 import pandas as pd
 import streamlit as st
 
-from report_dashboard.charts import render_charts
-from report_dashboard.filters import apply_filters, render_filters
-from report_dashboard.indicators import render_indicators
-from report_dashboard.tables import render_tables
+from dashboard_elements.charts import render_charts
+from dashboard_elements.filters import apply_filters, render_filters
+from dashboard_elements.indicators import render_indicators
+from dashboard_elements.tables import render_tables
 
 
 def render_dashboard(data: pd.DataFrame) -> None:

@@ -1,8 +1,8 @@
 import requests
 import streamlit as st
 
-from report_dashboard import render_dashboard
-from report_dashboard.data import load_data_from_onedrive, prepare_report_data
+from dashboard_elements import render_dashboard
+from dashboard_elements.data import load_data_from_onedrive, prepare_report_data
 
 
 st.set_page_config(
