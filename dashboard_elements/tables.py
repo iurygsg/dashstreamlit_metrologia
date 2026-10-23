@@ -24,29 +24,29 @@ def render_overdue_reports(data: pd.DataFrame) -> None:
     overdue_reports = overdue_reports.sort_values(
         "dias_atraso", ascending=False, na_position="last"
     )
-    st.dataframe(
-        overdue_reports[
-            [
-                "tarefa",
-                "cliente",
-                "equipamento",
-                "tecnico",
-                "dias_atraso",
-                "data_conclusao",
-            ]
-        ].rename(
-            columns={
-                "tarefa": "Tarefa",
-                "cliente": "Cliente",
-                "equipamento": "Equipamento",
-                "tecnico": "Técnico",
-                "dias_atraso": "Dias em atraso",
-                "data_conclusao": "Data de conclusão",
-            }
-        ),
-        width="stretch",
-        hide_index=True,
+    overdue_table = overdue_reports[
+        [
+            "tarefa",
+            "cliente",
+            "equipamento",
+            "tecnico",
+            "dias_atraso",
+            "data_conclusao",
+        ]
+    ].rename(
+        columns={
+            "tarefa": "Tarefa",
+            "cliente": "Cliente",
+            "equipamento": "Equipamento",
+            "tecnico": "Técnico",
+            "dias_atraso": "Dias em atraso",
+            "data_conclusao": "Data de conclusão",
+        }
     )
+    overdue_table["Data de conclusão"] = pd.to_datetime(
+        overdue_table["Data de conclusão"]
+    ).dt.strftime("%d/%m/%Y")
+    st.dataframe(overdue_table, width="stretch", hide_index=True)
 
 
 def render_filtered_reports(data: pd.DataFrame) -> None:
@@ -78,10 +78,6 @@ def render_filtered_reports(data: pd.DataFrame) -> None:
                 "observacao": "Observação",
             }
         )
-        st.download_button(
-            "Baixar dados filtrados (CSV)",
-            data=table.to_csv(index=False).encode("utf-8-sig"),
-            file_name="relatorios_filtrados.csv",
-            mime="text/csv",
-        )
+        for column in ("Data de conclusão", "Data de entrega"):
+            table[column] = pd.to_datetime(table[column]).dt.strftime("%d/%m/%Y")
         st.dataframe(table, width="stretch", hide_index=True)
