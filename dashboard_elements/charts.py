@@ -38,7 +38,11 @@ def render_charts(data: pd.DataFrame) -> None:
         if top_clients.empty:
             st.info("Não há clientes para exibir.")
         else:
-            st.bar_chart(top_clients.to_frame(), sort="-Relatórios")
+            st.bar_chart(
+                top_clients.to_frame(),
+                sort="-Relatórios",
+                horizontal=True,
+            )
 
     with technician_column:
         st.subheader("Relatórios por técnico")
@@ -48,4 +52,8 @@ def render_charts(data: pd.DataFrame) -> None:
         if technician_counts.empty:
             st.info("Não há técnicos para exibir.")
         else:
-            st.bar_chart(technician_counts.to_frame(), sort="-Relatórios")
+            st.bar_chart(
+                technician_counts.to_frame(),
+                sort="-Relatórios",
+                horizontal=True,
+            )

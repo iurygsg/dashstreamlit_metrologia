@@ -11,6 +11,7 @@ from dashboard_elements.data import (
     prepare_report_data,
 )
 from dashboard_elements.filters import apply_filters, render_filters
+from dashboard_elements.monthly_performance import render_monthly_performance
 
 
 st.set_page_config(
@@ -31,7 +32,7 @@ st.markdown(
         inset: 0;
         z-index: 0;
         pointer-events: none;
-        opacity: 0.15;
+        opacity: 0.06;
         background:
             linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)),
             url("app/static/laboratory-background.jpg") center / cover no-repeat;
@@ -59,7 +60,11 @@ st.title("Dashboard: Controle de Relatórios")
 with st.sidebar:
     selected_page = st.radio(
         "Página",
-        options=["Visão geral", "Análises detalhadas"],
+        options=[
+            "Visão geral",
+            "Desempenho mensal",
+            "Análises detalhadas",
+        ],
     )
     st.button(
         "Atualizar dados agora",
@@ -91,6 +96,13 @@ def render_dashboard_page() -> None:
     elif selected_page == "Visão geral":
         st.header("Visão geral")
         render_dashboard(report_data)
+    elif selected_page == "Desempenho mensal":
+        st.header("Desempenho mensal")
+        st.caption(
+            "Acompanhe conclusões técnicas, entregas e prazo de produção "
+            "com comparações entre períodos."
+        )
+        render_monthly_performance(report_data)
     else:
         st.header("Análises detalhadas")
         st.caption(
