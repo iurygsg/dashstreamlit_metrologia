@@ -9,7 +9,7 @@ from dashboard_elements.tables import render_tables
 
 def render_dashboard(data: pd.DataFrame) -> None:
     st.caption(
-        "Acompanhamento  de relatórios de qualificação sincronizados com o OneDrive."
+        "Acompanhamento de relatórios de qualificação sincronizados com o OneDrive."
     )
 
     filtered_data = apply_filters(data, render_filters(data))
