@@ -42,41 +42,6 @@ def render_detailed_analytics(data: pd.DataFrame) -> None:
         )
 
     st.divider()
-    st.subheader("Tarefas por mês")
-    st.caption(
-        "A primeira linha mostra os serviços técnicos concluídos por mês, usando "
-        "“Data de conclusão” como aproximação das entradas em produção. A segunda "
-        "mostra os relatórios entregues por mês, pela “Data de entrega do relatório”."
-    )
-    completed_services = analysis_data.dropna(subset=["data_conclusao"]).copy()
-    delivered_reports = analysis_data.dropna(subset=["data_entrega"]).copy()
-    if completed_services.empty and delivered_reports.empty:
-        st.info("Não há datas de conclusão ou de entrega para agrupar por mês.")
-    else:
-        completed_counts = (
-            completed_services["data_conclusao"]
-            .dt.to_period("M")
-            .value_counts()
-            .rename("Serviços técnicos concluídos")
-        )
-        delivered_counts = (
-            delivered_reports["data_entrega"]
-            .dt.to_period("M")
-            .value_counts()
-            .rename("Relatórios entregues")
-        )
-        monthly_counts = pd.concat(
-            [completed_counts, delivered_counts], axis=1
-        ).fillna(0)
-        monthly_counts = monthly_counts.astype(int).sort_index()
-        monthly_counts.index = monthly_counts.index.to_timestamp()
-        monthly_counts = monthly_counts.asfreq("MS", fill_value=0)
-        st.line_chart(
-            monthly_counts,
-            y=list(monthly_counts.columns),
-            color=["#2563EB", "#14B8A6"],
-        )
-
     monthly_production = valid_production.dropna(subset=["data_conclusao"]).copy()
     if monthly_production.empty:
         st.info("Não há prazos válidos para calcular a média mensal.")
