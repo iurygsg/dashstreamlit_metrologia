@@ -1,5 +1,6 @@
 from numbers import Real
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 
@@ -235,13 +236,53 @@ def render_monthly_performance(data: pd.DataFrame) -> None:
     st.caption(f"Variação exibida em relação a: {comparison.lower()}.")
     st.divider()
     st.subheader("Fluxo mensal")
-    chart_start = max(first_data_month, _month_offset(selected_month, -5))
-    chart_months = pd.date_range(chart_start, selected_month, freq="MS")
+    chart_months = available_months[available_months <= selected_month]
     flow = monthly_metrics.loc[
         chart_months, [COMPLETED_SERVICES, DELIVERED_REPORTS]
     ].copy()
-    flow.index.name = "Mês"
-    st.bar_chart(flow)
+    flow["Mês"] = [
+        f"{MONTH_NAMES[month.month - 1][:3]}/{month.year}"
+        for month in flow.index
+    ]
+    flow_data = flow.melt(
+        id_vars="Mês",
+        var_name="Indicador",
+        value_name="Relatórios",
+    )
+    flow_chart = (
+        alt.Chart(flow_data)
+        .mark_bar()
+        .encode(
+            x=alt.X(
+                "Mês:N",
+                sort=flow["Mês"].tolist(),
+                axis=alt.Axis(
+                    labelAngle=-45,
+                    labelOverlap=False,
+                    labelLimit=120,
+                ),
+                title="Mês",
+            ),
+            xOffset=alt.XOffset("Indicador:N"),
+            y=alt.Y("Relatórios:Q", title="Relatórios", scale=alt.Scale(zero=True)),
+            color=alt.Color(
+                "Indicador:N",
+                scale=alt.Scale(range=["#2563EB", "#14B8A6"]),
+                title=None,
+            ),
+            tooltip=[
+                alt.Tooltip("Mês:N", title="Mês"),
+                alt.Tooltip("Indicador:N", title="Indicador"),
+                alt.Tooltip("Relatórios:Q", title="Relatórios"),
+            ],
+        )
+        .properties(height=350)
+    )
+    st.altair_chart(
+        flow_chart,
+        width="stretch",
+        alt="Comparação mensal entre serviços concluídos e relatórios entregues",
+    )
 
     monthly_delivery_times = monthly_metrics[MEDIAN_DELIVERY_DAYS].dropna()
     monthly_delivery_times = monthly_delivery_times.loc[

@@ -4,12 +4,7 @@ import streamlit as st
 
 def render_charts(data: pd.DataFrame) -> None:
     st.divider()
-    status_column, monthly_column = st.columns(2)
-
-    with status_column:
-        st.subheader("Relatórios por status")
-        status_counts = data["status"].value_counts().rename("Relatórios")
-        st.bar_chart(status_counts.to_frame(), sort="-Relatórios")
+    monthly_column, client_column = st.columns(2)
 
     with monthly_column:
         st.subheader("Conclusões por mês")
@@ -25,7 +20,6 @@ def render_charts(data: pd.DataFrame) -> None:
             )
             st.line_chart(monthly_counts.to_frame())
 
-    client_column, technician_column = st.columns(2)
     with client_column:
         st.subheader("Clientes com mais relatórios")
         top_clients = (
@@ -44,16 +38,21 @@ def render_charts(data: pd.DataFrame) -> None:
                 horizontal=True,
             )
 
-    with technician_column:
-        st.subheader("Relatórios por técnico")
-        technician_counts = (
-            data["tecnico"].dropna().value_counts().rename("Relatórios")
+    st.subheader("Relatórios por técnico")
+    technician_counts = (
+        data["tecnico"].dropna().value_counts().rename("Relatórios")
+    )
+    if technician_counts.empty:
+        st.info("Não há técnicos para exibir.")
+    else:
+        technician_table = (
+            technician_counts.rename_axis("Técnico")
+            .reset_index()
+            .sort_values("Relatórios", ascending=False)
         )
-        if technician_counts.empty:
-            st.info("Não há técnicos para exibir.")
-        else:
-            st.bar_chart(
-                technician_counts.to_frame(),
-                sort="-Relatórios",
-                horizontal=True,
-            )
+        st.dataframe(
+            technician_table,
+            width="stretch",
+            hide_index=True,
+            alt="Quantidade de relatórios atribuídos a cada técnico",
+        )

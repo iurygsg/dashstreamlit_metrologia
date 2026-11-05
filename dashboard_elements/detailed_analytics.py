@@ -21,20 +21,15 @@ def render_detailed_analytics(data: pd.DataFrame) -> None:
     )
 
     st.subheader("Tempo de produção do relatório")
-    metrics = st.columns(3)
+    metrics = st.columns(2)
     if valid_production.empty:
-        metrics[0].metric("Mediana até a entrega", "Sem dados")
-        metrics[1].metric("Média até a entrega", "Sem dados")
+        metrics[0].metric("Média até a entrega", "Sem dados")
     else:
         metrics[0].metric(
-            "Mediana até a entrega",
-            f"{valid_production['dias_producao'].median():.0f} dias",
-        )
-        metrics[1].metric(
             "Média até a entrega",
             f"{valid_production['dias_producao'].mean():.1f} dias",
         )
-    metrics[2].metric("Relatórios com datas válidas", f"{len(valid_production):,}")
+    metrics[1].metric("Relatórios com datas válidas", f"{len(valid_production):,}")
     st.caption(
         "O prazo é calculado em dias corridos entre a conclusão do serviço técnico "
         "e a entrega do relatório. Só entram no cálculo registros com as duas "
@@ -84,21 +79,34 @@ def render_detailed_analytics(data: pd.DataFrame) -> None:
 
     monthly_production = valid_production.dropna(subset=["data_conclusao"]).copy()
     if monthly_production.empty:
-        st.info("Não há prazos válidos para calcular a mediana mensal.")
+        st.info("Não há prazos válidos para calcular a média mensal.")
     else:
         monthly_production["Mês"] = (
             monthly_production["data_conclusao"]
             .dt.to_period("M")
             .dt.to_timestamp()
         )
-        monthly_medians = (
+        monthly_means = (
             monthly_production.groupby("Mês")["dias_producao"]
-            .median()
-            .rename("Mediana até a entrega (dias)")
+            .mean()
+            .rename("Média até a entrega (dias)")
         )
-        st.subheader("Mediana do tempo de produção por mês")
-        st.caption("Tempo que leva para a produção do relatório")
-        st.line_chart(monthly_medians.to_frame())
+        month_range = pd.date_range(
+            monthly_means.index.min(),
+            monthly_means.index.max(),
+            freq="MS",
+        )
+        monthly_means = monthly_means.reindex(month_range)
+        monthly_means.index = monthly_means.index.strftime("%m/%Y")
+        st.subheader("Média do tempo de produção por mês")
+        st.caption(
+            "Média de dias entre a conclusão do serviço técnico e a entrega "
+            "do relatório, agrupada pelo mês de conclusão."
+        )
+        st.line_chart(
+            monthly_means.to_frame(),
+            alt="Média mensal de dias entre conclusão técnica e entrega do relatório",
+        )
 
     with st.expander("Ver prazos por relatório"):
         report_details = valid_production[
